@@ -14,13 +14,9 @@ for row in csvreader:
     for d in data:
         keyword_data.append(("id", d['id'], "name", d['name']))
         hashkeyword_data.append(("movie_id", movie_id, "id", d['id']))
-
-#keyword_data = set(keyword_data)
-print(len(keyword_data))
-print(len(set(keyword_data)))
-print(len(hashkeyword_data))
-#print(len(set(hashkeyword_data)))
 file.close()
+
+keyword_data = set(keyword_data)
 
 f = open("Keyword.csv", 'w',newline='', encoding='utf-8')
 writer = csv.writer(f)
@@ -37,3 +33,5 @@ for row in hashkeyword_data:
     writer.writerow([row[1], row[3]])
 # Write the data for the hashkeyword table
 f.close()
+
+

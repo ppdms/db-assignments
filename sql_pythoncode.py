@@ -26,7 +26,7 @@ for row in keyword_data:
     writer.writerow([row[1], row[3]])
 f.close()
 
-f = open("hashkeyword.csv", 'w', newline='',encoding='utf-8')
+f = open("haskeyword.csv", 'w', newline='',encoding='utf-8')
 writer = csv.writer(f)
 writer.writerow(["movie_id", "keyword_id"])
 for row in hashkeyword_data:

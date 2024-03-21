@@ -3,10 +3,6 @@
 --dbo.ratings:
 
 ALTER TABLE ratings
-ADD CONSTRAINT ratings_pk
-PRIMARY KEY (user_id,movie_id);
-
-ALTER TABLE ratings
 ADD CONSTRAINT FK_movieid FOREIGN KEY (movie_id) REFERENCES movie(id);
 -----------
 --dbo.genre:
@@ -87,10 +83,10 @@ ALTER TABLE Keyword
 ADD CONSTRAINT Keyword_pk
 PRIMARY KEY (id);
 -----------
---dbo.hashkeyword:
+--dbo.haskeyword:
 
-ALTER TABLE hashkeyword
+ALTER TABLE haskeyword
 ADD CONSTRAINT FK_movieid_hashkeyword FOREIGN KEY (movie_id) REFERENCES movie(id);
 
-ALTER TABLE hashkeyword
+ALTER TABLE haskeyword
 ADD CONSTRAINT FK_keywordid_hashkeyword FOREIGN KEY (keyword_id) REFERENCES Keyword(id);

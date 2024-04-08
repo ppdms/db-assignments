@@ -61,10 +61,10 @@ GROUP BY movie.id, movie.title) as t ON m.id = t.id))
 SELECT movie.title, avg(r.rating) as rating
 FROM ((movie INNER JOIN movie_crew c ON c.name = 'Quentin Tarantino' AND c.job = 'Director' AND movie.id = c.movie_id)
     LEFT OUTER JOIN ratings r ON movie.id = r.movie_id)
-WHERE rating BETWEEN 3 AND 3.5
 GROUP BY movie.id, movie.title
+HAVING avg(r.rating) BETWEEN 3 AND 3.5
 
--- 8. 4 expected
+-- 8. 3 expected
 -- Explanation: find titles of movies that got ratings between 3 and 3.5 and in which Tarantino was a director
 
 SELECT movie.title, avg(r.rating) as rating

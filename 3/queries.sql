@@ -70,10 +70,11 @@ HAVING avg(r.rating) BETWEEN 3 AND 3.5
 SELECT movie.title, avg(r.rating) as rating
 FROM ((movie INNER JOIN movie_crew c ON movie.id = c.movie_id)
     LEFT OUTER JOIN ratings r ON movie.id = r.movie_id)
-WHERE rating>4 AND title LIKE 'The%'
+WHERE title LIKE 'The%'
 GROUP BY movie.id, movie.title
+HAVING avg(r.rating) > 4
 
--- 9. 174 expected
+-- 9. 46 expected
 -- Explanation: find titles and ratings of movies with ratings > 4 whose titles starts with "The"
 
 SELECT m.title

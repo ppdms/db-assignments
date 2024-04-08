@@ -28,7 +28,7 @@ GROUP BY movie.id, movie.title
 ORDER BY rating DESC
 
 -- 4. 6 expected
--- Explanation: find titles and ratings of movies where Tarantino was the director, and sort them by average user rating
+-- Explanation: find titles and average rating of movies where Tarantino was the director, and sort them by average user rating
 
 SELECT DISTINCT m.title
 FROM (movie m INNER JOIN (genre g LEFT OUTER JOIN hasGenre h ON g.id = h.genre_id and (g.name = 'Adventure' or g.name = 'Fantasy')) on m.id = movie_id)

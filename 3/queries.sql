@@ -36,24 +36,34 @@ FROM (movie m INNER JOIN (genre g LEFT OUTER JOIN hasGenre h ON g.id = h.genre_i
 -- 5. 1487 expected
 -- Explanation: find titles of movies whose genre is either adventure or fantasy and list movies having both only once
 
-SELECT m.original_title FROM (movie m INNER JOIN (SELECT movie.id, avg(r.rating) as rating
-FROM ((movie INNER JOIN movie_crew c ON c.name = 'Quentin Tarantino' AND c.job = 'Director' AND movie.id = c.movie_id)
-    LEFT OUTER JOIN ratings r ON movie.id = r.movie_id)
-GROUP BY movie.id, movie.title) as t ON m.id = t.id) where t.rating = (SELECT min(rating) FROM (movie m INNER JOIN (SELECT movie.id, avg(r.rating) as rating
-FROM ((movie INNER JOIN movie_crew c ON c.name = 'Quentin Tarantino' AND c.job = 'Director' AND movie.id = c.movie_id)
-    LEFT OUTER JOIN ratings r ON movie.id = r.movie_id)
-GROUP BY movie.id, movie.title) as t ON m.id = t.id))
+SELECT m.original_title
+FROM (movie m INNER JOIN (
+    SELECT movie.id, avg(r.rating) as rating
+    FROM ((movie INNER JOIN movie_crew c ON c.name = 'Quentin Tarantino' AND c.job = 'Director' AND movie.id = c.movie_id) LEFT OUTER JOIN ratings r ON movie.id = r.movie_id)
+    GROUP BY movie.id, movie.title) as t ON m.id = t.id) 
+WHERE t.rating = (
+    SELECT min(rating) 
+    FROM (movie m INNER JOIN (
+        SELECT movie.id, avg(r.rating) as rating
+        FROM ((movie INNER JOIN movie_crew c ON c.name = 'Quentin Tarantino' AND c.job = 'Director' AND movie.id = c.movie_id)
+        LEFT OUTER JOIN ratings r ON movie.id = r.movie_id)
+        GROUP BY movie.id, movie.title) as t ON m.id = t.id))
 
 -- 6. 1 expected
 -- Explanation: Get the original title of the movie with Tarantino as director with the worst rating.
 
-SELECT m.original_title FROM (movie m INNER JOIN (SELECT movie.id, avg(r.rating) as rating
-FROM ((movie INNER JOIN movie_crew c ON c.name = 'Quentin Tarantino' AND c.job = 'Director' AND movie.id = c.movie_id)
-    LEFT OUTER JOIN ratings r ON movie.id = r.movie_id)
-GROUP BY movie.id, movie.title) as t ON m.id = t.id) where t.rating = (SELECT max(rating) FROM (movie m INNER JOIN (SELECT movie.id, avg(r.rating) as rating
-FROM ((movie INNER JOIN movie_crew c ON c.name = 'Quentin Tarantino' AND c.job = 'Director' AND movie.id = c.movie_id)
-    LEFT OUTER JOIN ratings r ON movie.id = r.movie_id)
-GROUP BY movie.id, movie.title) as t ON m.id = t.id))
+SELECT m.original_title
+FROM (movie m INNER JOIN (
+    SELECT movie.id, avg(r.rating) as rating
+    FROM ((movie INNER JOIN movie_crew c ON c.name = 'Quentin Tarantino' AND c.job = 'Director' AND movie.id = c.movie_id) LEFT OUTER JOIN ratings r ON movie.id = r.movie_id)
+    GROUP BY movie.id, movie.title) as t ON m.id = t.id) 
+WHERE t.rating = (
+    SELECT max(rating) 
+    FROM (movie m INNER JOIN (
+        SELECT movie.id, avg(r.rating) as rating
+        FROM ((movie INNER JOIN movie_crew c ON c.name = 'Quentin Tarantino' AND c.job = 'Director' AND movie.id = c.movie_id)
+        LEFT OUTER JOIN ratings r ON movie.id = r.movie_id)
+        GROUP BY movie.id, movie.title) as t ON m.id = t.id))
 
 -- 7. 1 expected
 -- Explanation: Get the original title of the movie with Tarantino as director with the best rating

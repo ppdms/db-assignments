@@ -1,0 +1,32 @@
+SELECT movie_id
+FROM belongstocollection
+GROUP BY movie_id
+HAVING COUNT(DISTINCT collection_id) > 1;
+
+SELECT id
+FROM genre
+WHERE id not in (
+    SELECT genre_id
+    FROM hasGenre
+)
+
+SELECT id
+FROM productioncompany
+WHERE id not in (
+    SELECT pc_id
+    FROM hasProductioncompany
+)
+
+SELECT id
+FROM Keyword
+WHERE id not in (
+    SELECT keyword_id
+    FROM haskeyword
+)
+
+SELECT id
+FROM movie
+WHERE id in (
+    SELECT movie_id
+    FROM ratings
+)

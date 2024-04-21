@@ -1,7 +1,13 @@
+/*
 SELECT movie_id
 FROM belongstocollection
 GROUP BY movie_id
 HAVING COUNT(DISTINCT collection_id) > 1;
+
+SELECT collection_id
+FROM belongstocollection
+GROUP BY collection_id
+HAVING COUNT(DISTINCT movie_id) > 1;
 
 SELECT id
 FROM genre
@@ -30,3 +36,65 @@ WHERE id in (
     SELECT movie_id
     FROM ratings
 )
+
+SELECT id
+FROM movie
+WHERE id not in (
+    SELECT movie_id
+    FROM hasGenre
+)
+SELECT id
+FROM movie
+WHERE id not in (
+    SELECT movie_id
+    FROM hasProductioncompany
+)
+SELECT id
+FROM movie
+WHERE id not in (
+    SELECT movie_id
+    FROM haskeyword
+)
+
+SELECT id
+FROM movie
+WHERE id not in (
+    SELECT movie_id
+    FROM movie_cast
+)
+SELECT id
+FROM movie
+WHERE id not in (
+    SELECT movie_id
+    FROM movie_crew
+)
+
+SELECT movie_id
+FROM hasGenre
+GROUP BY movie_id
+HAVING COUNT(DISTINCT genre_id) > 1;
+
+SELECT movie_id
+FROM hasProductioncompany
+GROUP BY movie_id
+HAVING COUNT(DISTINCT pc_id) > 1;
+
+SELECT movie_id
+FROM haskeyword
+GROUP BY movie_id
+HAVING COUNT(DISTINCT keyword_id) > 1;
+*/
+SELECT genre_id
+FROM hasGenre
+GROUP BY genre_id
+HAVING COUNT(DISTINCT movie_id) > 1;
+
+SELECT pc_id
+FROM hasProductioncompany
+GROUP BY pc_id
+HAVING COUNT(DISTINCT movie_id) > 1;
+
+SELECT keyword_id
+FROM haskeyword
+GROUP BY keyword_id
+HAVING COUNT(DISTINCT movie_id) > 1;

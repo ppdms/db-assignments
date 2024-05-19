@@ -54,5 +54,95 @@ FROM movie JOIN (
 ORDER BY year(release_date), title;
 
 /* 10 */
+SELECT m_cr.name
+FROM movie_crew m_cr
+WHERE m_cr.job = 'Director'
+  AND (
+    EXISTS (
+      SELECT 1
+      FROM movie m
+      JOIN hasGenre h_g ON m.id = h_g.movie_id
+      JOIN genre g ON h_g.genre_id = g.id
+      WHERE m_cr.movie_id = m.id AND g.name = 'Horror'
+    ) OR EXISTS (
+      SELECT 1
+      FROM movie m
+      JOIN hasKeyword h_k ON m.id = h_k.movie_id
+      JOIN keyword k ON h_k.keyword_id = k.id
+      WHERE m_cr.movie_id = m.id AND k.name = 'Horror'
+    )
+  )
+  AND (
+    EXISTS (
+      SELECT 1
+      FROM movie m
+      JOIN hasGenre h_g ON m.id = h_g.movie_id
+      JOIN genre g ON h_g.genre_id = g.id
+      WHERE m_cr.movie_id = m.id AND g.name = 'Comedy'
+    ) OR EXISTS (
+      SELECT 1
+      FROM movie m
+      JOIN hasKeyword h_k ON m.id = h_k.movie_id
+      JOIN keyword k ON h_k.keyword_id = k.id
+      WHERE m_cr.movie_id = m.id AND k.name = 'Comedy'
+    )
+  )
+  AND NOT EXISTS (
+    SELECT 1
+    FROM movie m
+    JOIN hasGenre h_g ON m.id = h_g.movie_id
+    JOIN genre g ON h_g.genre_id = g.id
+    WHERE m_cr.movie_id = m.id AND g.name NOT IN ('Horror', 'Comedy')
+  )
+  AND NOT EXISTS (
+    SELECT 1
+    FROM movie m
+    JOIN hasKeyword h_k ON m.id = h_k.movie_id
+    JOIN keyword k ON h_k.keyword_id = k.id
+    WHERE m_cr.movie_id = m.id AND k.name NOT IN ('Horror', 'Comedy')
+  );
+
 /* 11 */
-/* 12 */
+SELECT m_cr.name
+FROM movie_crew m_cr
+JOIN movie m ON m_cr.movie_id = m.id
+LEFT JOIN hasGenre h_g ON m.id = h_g.movie_id
+LEFT JOIN genre g ON h_g.genre_id = g.id
+LEFT JOIN hasKeyword h_k ON m.id = h_k.movie_id
+LEFT JOIN keyword k ON h_k.keyword_id = k.id
+WHERE m_cr.job = 'Director'
+  AND (g.name = 'Horror' OR k.name = 'Horror')
+
+INTERSECT
+
+SELECT m_cr.name
+FROM movie_crew m_cr
+JOIN movie m ON m_cr.movie_id = m.id
+LEFT JOIN hasGenre h_g ON m.id = h_g.movie_id
+LEFT JOIN genre g ON h_g.genre_id = g.id
+LEFT JOIN hasKeyword h_k ON m.id = h_k.movie_id
+LEFT JOIN keyword k ON h_k.keyword_id = k.id
+WHERE m_cr.job = 'Director'
+  AND (g.name = 'Comedy' OR k.name = 'Comedy')
+
+EXCEPT
+
+SELECT m_cr.name
+FROM movie_crew m_cr
+JOIN movie m ON m_cr.movie_id = m.id
+LEFT JOIN hasGenre h_g ON m.id = h_g.movie_id
+LEFT JOIN genre g ON h_g.genre_id = g.id
+LEFT JOIN hasKeyword h_k ON m.id = h_k.movie_id
+LEFT JOIN keyword k ON h_k.keyword_id = k.id
+WHERE m_cr.job = 'Director'
+  AND (g.name NOT IN ('Horror', 'Comedy') OR k.name NOT IN ('Horror', 'Comedy'));
+
+
+/* 12 note: r1.movie_id < r2.movie_id so we only get each pair once */
+CREATE VIEW Popular_Movie_Pairs AS
+SELECT r1.movie_id AS id1, r2.movie_id AS id2
+FROM ratings r1
+JOIN ratings r2 ON r1.user_id = r2.user_id AND r1.movie_id < r2.movie_id
+WHERE r1.rating > 4 AND r2.rating > 4
+GROUP BY r1.movie_id, r2.movie_id
+HAVING COUNT(*) > 10;

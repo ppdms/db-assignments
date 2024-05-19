@@ -53,7 +53,7 @@ FROM movie JOIN (
 ) as p1 ON year(movie.release_date) = p1.year AND movie.budget = p1.max_budget
 ORDER BY year(release_date), title;
 
-/* 10 */
+/* 10 note: not sure if keyword should be there */
 SELECT m_cr.name
 FROM movie_crew m_cr
 WHERE m_cr.job = 'Director'
@@ -102,7 +102,7 @@ WHERE m_cr.job = 'Director'
     WHERE m_cr.movie_id = m.id AND k.name NOT IN ('Horror', 'Comedy')
   );
 
-/* 11 */
+/* 11 note: not sure if keyword should be there */
 SELECT m_cr.name
 FROM movie_crew m_cr
 JOIN movie m ON m_cr.movie_id = m.id

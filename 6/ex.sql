@@ -96,8 +96,8 @@ John Landis
 SELECT m_cr.name
 FROM movie_crew m_cr
 JOIN movie m ON m_cr.movie_id = m.id
-LEFT JOIN hasGenre h_g ON m.id = h_g.movie_id
-LEFT JOIN genre g ON h_g.genre_id = g.id
+JOIN hasGenre h_g ON m.id = h_g.movie_id
+JOIN genre g ON h_g.genre_id = g.id
 WHERE m_cr.job = 'Director'
   AND g.name = 'Horror' 
 
@@ -106,8 +106,8 @@ INTERSECT
 SELECT m_cr.name
 FROM movie_crew m_cr
 JOIN movie m ON m_cr.movie_id = m.id
-LEFT JOIN hasGenre h_g ON m.id = h_g.movie_id
-LEFT JOIN genre g ON h_g.genre_id = g.id
+JOIN hasGenre h_g ON m.id = h_g.movie_id
+JOIN genre g ON h_g.genre_id = g.id
 WHERE m_cr.job = 'Director'
   AND g.name = 'Comedy'
 
@@ -116,8 +116,8 @@ EXCEPT
 SELECT m_cr.name
 FROM movie_crew m_cr
 JOIN movie m ON m_cr.movie_id = m.id
-LEFT JOIN hasGenre h_g ON m.id = h_g.movie_id
-LEFT JOIN genre g ON h_g.genre_id = g.id
+JOIN hasGenre h_g ON m.id = h_g.movie_id
+JOIN genre g ON h_g.genre_id = g.id
 WHERE m_cr.job = 'Director'
   AND g.name NOT IN ('Horror', 'Comedy');
 

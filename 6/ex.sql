@@ -53,65 +53,53 @@ FROM movie JOIN (
 ) as p1 ON year(movie.release_date) = p1.year AND movie.budget = p1.max_budget
 ORDER BY year(release_date), title;
 
-/* 10 note: not sure if keyword should be there */
+/* 10 */
 SELECT m_cr.name
 FROM movie_crew m_cr
 WHERE m_cr.job = 'Director'
-  AND (
-    EXISTS (
+  AND EXISTS (
       SELECT 1
       FROM movie m
       JOIN hasGenre h_g ON m.id = h_g.movie_id
       JOIN genre g ON h_g.genre_id = g.id
       WHERE m_cr.movie_id = m.id AND g.name = 'Horror'
-    ) OR EXISTS (
-      SELECT 1
-      FROM movie m
-      JOIN hasKeyword h_k ON m.id = h_k.movie_id
-      JOIN keyword k ON h_k.keyword_id = k.id
-      WHERE m_cr.movie_id = m.id AND k.name = 'Horror'
     )
-  )
-  AND (
-    EXISTS (
+  AND EXISTS (
       SELECT 1
       FROM movie m
       JOIN hasGenre h_g ON m.id = h_g.movie_id
       JOIN genre g ON h_g.genre_id = g.id
       WHERE m_cr.movie_id = m.id AND g.name = 'Comedy'
-    ) OR EXISTS (
-      SELECT 1
-      FROM movie m
-      JOIN hasKeyword h_k ON m.id = h_k.movie_id
-      JOIN keyword k ON h_k.keyword_id = k.id
-      WHERE m_cr.movie_id = m.id AND k.name = 'Comedy'
     )
-  )
   AND NOT EXISTS (
     SELECT 1
     FROM movie m
     JOIN hasGenre h_g ON m.id = h_g.movie_id
     JOIN genre g ON h_g.genre_id = g.id
     WHERE m_cr.movie_id = m.id AND g.name NOT IN ('Horror', 'Comedy')
-  )
-  AND NOT EXISTS (
-    SELECT 1
-    FROM movie m
-    JOIN hasKeyword h_k ON m.id = h_k.movie_id
-    JOIN keyword k ON h_k.keyword_id = k.id
-    WHERE m_cr.movie_id = m.id AND k.name NOT IN ('Horror', 'Comedy')
   );
 
-/* 11 note: not sure if keyword should be there */
+James Orr
+Takashi Miike
+Michael Gottlieb
+Michael Ritchie
+John Whitesell
+Sean McNamara
+Darrell James Roodt
+Albert Pyun
+Daniel Goldberg
+Burt Kennedy
+Robert Butler
+John Landis
+
+/* 11 */
 SELECT m_cr.name
 FROM movie_crew m_cr
 JOIN movie m ON m_cr.movie_id = m.id
 LEFT JOIN hasGenre h_g ON m.id = h_g.movie_id
 LEFT JOIN genre g ON h_g.genre_id = g.id
-LEFT JOIN hasKeyword h_k ON m.id = h_k.movie_id
-LEFT JOIN keyword k ON h_k.keyword_id = k.id
 WHERE m_cr.job = 'Director'
-  AND (g.name = 'Horror' OR k.name = 'Horror')
+  AND g.name = 'Horror' 
 
 INTERSECT
 
@@ -120,10 +108,8 @@ FROM movie_crew m_cr
 JOIN movie m ON m_cr.movie_id = m.id
 LEFT JOIN hasGenre h_g ON m.id = h_g.movie_id
 LEFT JOIN genre g ON h_g.genre_id = g.id
-LEFT JOIN hasKeyword h_k ON m.id = h_k.movie_id
-LEFT JOIN keyword k ON h_k.keyword_id = k.id
 WHERE m_cr.job = 'Director'
-  AND (g.name = 'Comedy' OR k.name = 'Comedy')
+  AND g.name = 'Comedy'
 
 EXCEPT
 
@@ -132,10 +118,12 @@ FROM movie_crew m_cr
 JOIN movie m ON m_cr.movie_id = m.id
 LEFT JOIN hasGenre h_g ON m.id = h_g.movie_id
 LEFT JOIN genre g ON h_g.genre_id = g.id
-LEFT JOIN hasKeyword h_k ON m.id = h_k.movie_id
-LEFT JOIN keyword k ON h_k.keyword_id = k.id
 WHERE m_cr.job = 'Director'
-  AND (g.name NOT IN ('Horror', 'Comedy') OR k.name NOT IN ('Horror', 'Comedy'));
+  AND g.name NOT IN ('Horror', 'Comedy');
+
+Burt Kennedy
+Arlene Sanford
+Daniel Goldberg
 
 
 /* 12 note: r1.movie_id < r2.movie_id so we only get each pair once */

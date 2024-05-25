@@ -54,43 +54,33 @@ FROM movie JOIN (
 ORDER BY year(release_date), title;
 
 /* 10 */
-SELECT m_cr.name
+SELECT DISTINCT m_cr.name
 FROM movie_crew m_cr
 WHERE m_cr.job = 'Director'
   AND EXISTS (
       SELECT 1
       FROM movie m
+      JOIN movie_crew m_c ON m_c.movie_id = m.id
       JOIN hasGenre h_g ON m.id = h_g.movie_id
       JOIN genre g ON h_g.genre_id = g.id
-      WHERE m_cr.movie_id = m.id AND g.name = 'Horror'
+      WHERE m_c.name = m_cr.name AND m_c.job = 'Director' AND g.name = 'Horror'
     )
   AND EXISTS (
       SELECT 1
       FROM movie m
+      JOIN movie_crew m_c ON m_c.movie_id = m.id
       JOIN hasGenre h_g ON m.id = h_g.movie_id
       JOIN genre g ON h_g.genre_id = g.id
-      WHERE m_cr.movie_id = m.id AND g.name = 'Comedy'
+      WHERE m_c.name = m_cr.name AND m_c.job = 'Director' AND g.name = 'Comedy'
     )
   AND NOT EXISTS (
-    SELECT 1
-    FROM movie m
-    JOIN hasGenre h_g ON m.id = h_g.movie_id
-    JOIN genre g ON h_g.genre_id = g.id
-    WHERE m_cr.movie_id = m.id AND g.name NOT IN ('Horror', 'Comedy')
-  );
-
-James Orr
-Takashi Miike
-Michael Gottlieb
-Michael Ritchie
-John Whitesell
-Sean McNamara
-Darrell James Roodt
-Albert Pyun
-Daniel Goldberg
-Burt Kennedy
-Robert Butler
-John Landis
+      SELECT 1
+      FROM movie m
+      JOIN movie_crew m_c ON m_c.movie_id = m.id
+      JOIN hasGenre h_g ON m.id = h_g.movie_id
+      JOIN genre g ON h_g.genre_id = g.id
+      WHERE m_c.name = m_cr.name AND m_c.job = 'Director' AND g.name NOT IN ('Horror', 'Comedy')
+    );
 
 /* 11 */
 SELECT m_cr.name
@@ -120,11 +110,6 @@ JOIN hasGenre h_g ON m.id = h_g.movie_id
 JOIN genre g ON h_g.genre_id = g.id
 WHERE m_cr.job = 'Director'
   AND g.name NOT IN ('Horror', 'Comedy');
-
-Burt Kennedy
-Arlene Sanford
-Daniel Goldberg
-
 
 /* 12 note: r1.movie_id < r2.movie_id so we only get each pair once */
 CREATE VIEW Popular_Movie_Pairs AS
